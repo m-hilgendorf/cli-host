@@ -1,12 +1,15 @@
 [package]
 name = "cli-host"
+description = "Host a VST3 plugin from the command line"
 version = "0.1.0"
-authors = ["m-hilgendorf"]
+authors = ["Mike Hilgendorf <mike@hilgendorf.audio>"]
 edition = "2018"
+license = "GPLv3"
 
 [dependencies]
-structopt = "0.2.16"
+structopt  = "0.2.16"
 libloading = "0.5"
+widestring = "0.4.0"
 
 [features]
 default = []
