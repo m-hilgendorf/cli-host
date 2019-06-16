@@ -124,8 +124,18 @@ macro_rules! RIDL {
             #[inline]
             fn uuidof() -> $crate::pluginterfaces::TUID {
                 let bytes : [u32; 4] = [$w0, $w1, $w2, $w3];
-                let tuid  : [i8; 16] = unsafe { std::mem::transmute(bytes) };
-
+                let mut tuid  : [i8; 16] = [0;16];
+                for i in 0..4 {
+                    let big_e = bytes[i].to_be_bytes();
+                    for k in 0..4 {
+                        tuid[i*4 + k] = unsafe { std::mem::transmute(big_e[k]) };
+                    }
+                }
+                println!("{:x}{:x}{:x}{:x}", bytes[0],bytes[1],bytes[2],bytes[3]);
+                for i in 0..16 {
+                    print!("{:x}", tuid[i]);
+                }
+                println!("");
                 tuid
             }
         }
