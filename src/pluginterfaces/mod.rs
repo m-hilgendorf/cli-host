@@ -36,7 +36,7 @@ impl<T> VstPtr<T> where T : Interface {
     pub fn cast<U> (&self) -> Result<VstPtr<U>, i32> where U: Interface {
         let mut obj = null_mut();
         let err = unsafe { 
-            let iid = U::uuidof();
+            let iid = U::iid();
             self.as_unknown().queryInterface(&iid as *const i8, &mut obj)
         };
         if err < 0 {  

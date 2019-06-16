@@ -8,7 +8,8 @@ use std::ptr::NonNull;
 
 #[macro_use]
 extern crate structopt;
-extern crate libloading as ll; 
+extern crate libloading as ll;
+
 use structopt::StructOpt;
 use std::path::PathBuf; 
 use std::os::raw::c_void;
@@ -19,7 +20,7 @@ use std::sync::mpsc::TrySendError::Full;
 
 pub trait Interface {
     // Returns the IID of the Interface
-    fn uuidof() -> pluginterfaces::TUID;
+    fn iid() -> pluginterfaces::TUID;
 }
 
 #[macro_use]
@@ -53,8 +54,6 @@ fn main() {
         .expect("no such library");
 
     use pluginterfaces::*;
-//    use pluginterfaces::vst::ivstaudioprocessor::IAudioProcessor;
-
     unsafe {
         let GetPluginFactory : ll::Symbol<GetFactoryProc> = lib
             .get(b"GetPluginFactory")
@@ -69,7 +68,7 @@ fn main() {
             (*factory).getClassInfo(i, &mut info as *mut _);
             println!("{:?}", info);
             let mut ptr:* mut c_void = null_mut();
-            (*factory).createInstance (info.cid.as_ptr(), FUnknown::uuidof().as_ptr(), &mut ptr as *mut _);
+            (*factory).createInstance (info.cid.as_ptr(), FUnknown::iid().as_ptr(), &mut ptr as *mut _);
             instances.push(VstPtr::from_raw(ptr as *mut _));
         }
 

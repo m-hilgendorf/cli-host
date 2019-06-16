@@ -9,7 +9,7 @@
 
 #[macro_export]
 macro_rules! RIDL {
-    (#[uuid($($uuid:expr),+)]
+    (#[iid($($iid:expr),+)]
     interface $interface:ident ($vtbl:ident) {$(
         $(#[$($attrs:tt)*])* fn $method:ident($($p:ident : $t:ty,)*) -> $rtr:ty,
     )+}) => (
@@ -23,10 +23,10 @@ macro_rules! RIDL {
         impl $interface {
             $(RIDL!{@method $(#[$($attrs)*])* fn $method($($p: $t,)*) -> $rtr})+
         }
-        RIDL!{@uuid $interface $($uuid),+}
+        RIDL!{@iid $interface $($iid),+}
     );
 
-    (#[uuid($($uuid:expr),+)]
+    (#[iid($($iid:expr),+)]
     interface $interface:ident ($vtbl:ident) : $pinterface:ident ($pvtbl:ident) {}) => (
         RIDL!{@vtbl $interface $vtbl (pub parent: $pvtbl,)}
         #[repr(C)]
@@ -34,10 +34,10 @@ macro_rules! RIDL {
             pub lpVtbl: *const $vtbl,
         }
         RIDL!{@deref $interface $pinterface}
-        RIDL!{@uuid $interface $($uuid),+}
+        RIDL!{@iid $interface $($iid),+}
     );
 
-    (#[uuid($($uuid:expr),+)]
+    (#[iid($($iid:expr),+)]
     interface $interface:ident ($vtbl:ident) : $pinterface:ident ($pvtbl:ident) {$(
         $(#[$($attrs:tt)*])* fn $method:ident($($p:ident : $t:ty,)*) -> $rtr:ty,
     )+}) => (
@@ -52,7 +52,7 @@ macro_rules! RIDL {
             $(RIDL!{@method $(#[$($attrs)*])* fn $method($($p: $t,)*) -> $rtr})+
         }
         RIDL!{@deref $interface $pinterface}
-        RIDL!{@uuid $interface $($uuid),+}
+        RIDL!{@iid $interface $($iid),+}
     );
 
     (@deref $interface:ident $pinterface:ident) => (
@@ -117,12 +117,12 @@ macro_rules! RIDL {
         ) $($tail)*}
     );
 
-    (@uuid $interface:ident
+    (@iid $interface:ident
         $w0:expr, $w1:expr, $w2:expr, $w3:expr
     ) => (
         impl $crate::Interface for $interface {
             #[inline]
-            fn uuidof() -> $crate::pluginterfaces::TUID {
+            fn iid() -> $crate::pluginterfaces::TUID {
                 let bytes : [u32; 4] = [$w0, $w1, $w2, $w3];
                 let mut tuid  : [i8; 16] = [0;16];
                 for i in 0..4 {

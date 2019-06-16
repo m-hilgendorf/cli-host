@@ -75,7 +75,7 @@ pub struct ProcessData {
     processContext : *mut ProcessContext,
 }
 
-RIDL!{#[uuid(0x42043F99, 0xB7DA453C, 0xA569E79D, 0x9AAEC33D)]
+RIDL!{#[iid(0x42043F99, 0xB7DA453C, 0xA569E79D, 0x9AAEC33D)]
     interface IAudioProcessor(IAudioProcessorVtbl) : FUnknown(FUnknownVtbl) {
         fn setBusArrangements(inputs : *mut SpeakerArrangement, numIns : i32,
                               outputs : *mut SpeakerArrangement, numOuts : i32,)-> tresult,

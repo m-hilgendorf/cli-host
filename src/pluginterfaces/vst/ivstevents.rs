@@ -114,7 +114,7 @@ pub struct Event {
     inner : EventUnion,
 }
 
-RIDL!{#[uuid(0x3A2C4214, 0x346349FE, 0xB2C4F397, 0xB9695A44)]
+RIDL!{#[iid(0x3A2C4214, 0x346349FE, 0xB2C4F397, 0xB9695A44)]
     interface IEventList(IEventListVtbl) : FUnknown(FUnknownVtbl) {
         fn getEventCount() -> i32,
         fn getEvent(index : i32, e : *mut Event,) -> tresult,

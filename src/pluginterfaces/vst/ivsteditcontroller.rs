@@ -46,7 +46,7 @@ pub mod RestartFlags {
     pub const kRoutingInfoChanged: i32 = 1 << 9;
 }
 
-RIDL! {#[uuid(0x93A0BEA3, 0x0BD045DB, 0x8E890B0C, 0xC1E46AC6)]
+RIDL! {#[iid(0x93A0BEA3, 0x0BD045DB, 0x8E890B0C, 0xC1E46AC6)]
     interface IComponentHandler(IComponentHandlerVtbl) : FUnknown(FUnknownVtbl) {
         fn beginEdit(id : ParamID,) -> tresult,
         fn performEdit(id : ParamID, valueNormalized : ParamValue,) -> tresult,
@@ -54,7 +54,7 @@ RIDL! {#[uuid(0x93A0BEA3, 0x0BD045DB, 0x8E890B0C, 0xC1E46AC6)]
         fn restartComponent(flags : i32,) -> tresult,
     }
 }
-RIDL!{ #[uuid(0xF040B4B3, 0xA36045EC, 0xABCDC045, 0xB4D5A2CC)]
+RIDL!{ #[iid(0xF040B4B3, 0xA36045EC, 0xABCDC045, 0xB4D5A2CC)]
     interface IComponentHandler2(IComponentHandler2Vtbl) : FUnknown(FUnknownVtbl) {
         fn setDirty(state :TBool,) -> tresult,
         // todo: verify that adhoc polymorphism doesn't break this smh
@@ -63,12 +63,12 @@ RIDL!{ #[uuid(0xF040B4B3, 0xA36045EC, 0xABCDC045, 0xB4D5A2CC)]
         fn finishGroupEdit() -> tresult,
     }
 }
-RIDL! {#[uuid(0x067D02C1, 0x5B4E274D, 0xA92D90FD, 0x6EAF7240)]
+RIDL! {#[iid(0x067D02C1, 0x5B4E274D, 0xA92D90FD, 0x6EAF7240)]
     interface IComponentHandlerBusActivation(IComponentHandlerBusActivationVtbl) : FUnknown(FUnknownVtbl) {
         fn requestBusActivation(type_ : MediaType, dir : BusDirection, index : i32, state : TBool,) -> tresult,
     }
 }
-RIDL! {#[uuid(0xDCD7BBE3, 0x7742448D, 0xA874AACC, 0x979C759E)]
+RIDL! {#[iid(0xDCD7BBE3, 0x7742448D, 0xA874AACC, 0x979C759E)]
     interface IEditController(IEditControllerVtbl) : IPluginBase (IPluginBaseVtbl) {
         fn setComponentState (state : *mut IBStream,) -> tresult,
         fn setState (state : *mut IBStream,) -> tresult,
@@ -87,20 +87,20 @@ RIDL! {#[uuid(0xDCD7BBE3, 0x7742448D, 0xA874AACC, 0x979C759E)]
         fn createView (name : FIDString,) -> *mut IPlugView,
     }
 }
-RIDL! {#[uuid(0x7F4EFE59, 0xF3204967, 0xAC27A3AE, 0xAFB63038)]
+RIDL! {#[iid(0x7F4EFE59, 0xF3204967, 0xAC27A3AE, 0xAFB63038)]
     interface IEditController2 (IEditController2Vtbl) : FUnknown(FUnknownVtbl) {
         fn setKnobMode(mode :KnobMode,) -> tresult,
         fn openHelp(onlyCheck : TBool,) -> tresult,
         fn openAboutBox(onlyCheck : TBool,) -> tresult,
     }
 }
-RIDL! {#[uuid(0xDF0FF9F7, 0x49B74669, 0xB63AB732, 0x7ADBF5E5)]
+RIDL! {#[iid(0xDF0FF9F7, 0x49B74669, 0xB63AB732, 0x7ADBF5E5)]
     interface IMidiMapping(IMidiMappingVtbl) : FUnknown(FUnknownVtbl) {
         fn getMidiControllerAssignment (busINdex : i32, channel : i16, midiControllerNumber : CtrlNumber, id : *mut ParamID,) -> tresult,
     }
 }
 
-RIDL! {#[uuid(0xC1271208, 0x70594098, 0xB9DD34B3, 0x6BB0195E)]
+RIDL! {#[iid(0xC1271208, 0x70594098, 0xB9DD34B3, 0x6BB0195E)]
     interface IEditControllerHostEditing(IEditControllerHostEditingVtbl) : FUnknown(FUnknownVtbl) {
         fn beginEditFromHost (paramId : ParamID,) -> tresult,
         fn endEditFromHost (paramId : ParamID,) -> tresult,

@@ -46,7 +46,7 @@ pub struct RoutingInfo {
     busIndex : i32,
     channel : i32
 }
-RIDL! {#[uuid(0xE831FF31, 0xE831FF31, 0x928EBBEE, 0x25697802)]
+RIDL! {#[iid(0xE831FF31, 0xE831FF31, 0x928EBBEE, 0x25697802)]
     interface IComponent(IComponentVtbl) : IPluginBase(IPluginBaseVtbl) {
         fn getControllerClassID(classId : TUID,) -> tresult,
         fn setIoMode (mode : IoMode,) -> tresult,

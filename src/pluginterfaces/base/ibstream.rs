@@ -7,7 +7,7 @@ pub const kIBSeakEnd : i32 = 2;
 use std::os::raw::c_void;
 use super::funknown::*;
 
-RIDL! {#[uuid(0xC3BF6EA2, 0x30994752, 0x9B6BF990, 0x1EE33E9B)]
+RIDL! {#[iid(0xC3BF6EA2, 0x30994752, 0x9B6BF990, 0x1EE33E9B)]
     interface IBStream(IBStreamVtbl) : FUnknown(FUnknownVtbl) {
     	fn read(buffer : *mut c_void, numBytes : i32, numBytesRead : *mut i32,) -> tresult,
         fn write(buffer : *mut c_void, numBytes : i32, numBytesWritten : *mut i32,) -> tresult,
