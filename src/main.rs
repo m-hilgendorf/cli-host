@@ -29,6 +29,7 @@ mod pluginterfaces;
 #[structopt(name = "cli-host")]
 struct Opt {
     #[structopt(short= "p", long = "path")]
+    #[structopt(parse(from_os_str))]
     path : PathBuf
 }
 
@@ -44,8 +45,8 @@ fn main() {
            .unwrap()
            .to_str()
            .unwrap());
-    lib_path.set_extension("so");
-    
+
+    let p = lib_path.as_path();
     let lib = ll::Library::new(lib_path
         .as_path())
         .expect("no such library");
@@ -69,8 +70,8 @@ fn main() {
         let u       = factory.as_unknown();
         let next    = factory
             .as_unknown()
-            .queryInterface(&IPluginFactory::uuidof() as *const i8, &mut ptr as *mut *mut _);
+            .queryInterface(&IPluginFactory2::uuidof() as *const i8, &mut ptr as *mut *mut _);
         
-        println!("{:?}\n{:?}", u as *const _, factory.as_raw());
+        println!("{}\n{:?}", next, ptr);
     }
 }

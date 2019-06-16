@@ -8,7 +8,6 @@ edition = "2018"
 structopt = "0.2.16"
 libloading = "0.5"
 
-
 [features]
 default = []
 unicode = []
