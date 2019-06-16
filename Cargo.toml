@@ -1,0 +1,14 @@
+[package]
+name = "cli-host"
+version = "0.1.0"
+authors = ["m-hilgendorf"]
+edition = "2018"
+
+[dependencies]
+structopt = "0.2.16"
+libloading = "0.5"
+
+
+[features]
+default = []
+unicode = []
