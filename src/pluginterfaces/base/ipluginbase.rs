@@ -1,4 +1,4 @@
-use super::funkown::*;
+use super::funknown::*;
 use super::ftypes::*;
 use std::fmt;
 use std::os::raw::c_void;

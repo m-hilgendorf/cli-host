@@ -1,6 +1,6 @@
 mod ftypes;
-mod funkown;
+mod funknown;
 mod ipluginbase;
 pub use self::ftypes::*;
-pub use self::funkown::*;
+pub use self::funknown::*;
 pub use self::ipluginbase::*;
