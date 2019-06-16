@@ -131,11 +131,6 @@ macro_rules! RIDL {
                         tuid[i*4 + k] = unsafe { std::mem::transmute(big_e[k]) };
                     }
                 }
-                println!("{:x}{:x}{:x}{:x}", bytes[0],bytes[1],bytes[2],bytes[3]);
-                for i in 0..16 {
-                    print!("{:x}", tuid[i]);
-                }
-                println!("");
                 tuid
             }
         }
