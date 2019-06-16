@@ -18,8 +18,6 @@ pub struct PClassInfo {
     pub name        : [char8; 64],
 }
 
-
-
 #[repr(C)]
 pub struct PClassInfo2 {
     pub cid           : TUID,
