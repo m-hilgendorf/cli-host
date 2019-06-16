@@ -7,7 +7,9 @@ mod ivstaudioprocessor;
 mod ivstprocesscontext;
 mod ivstnoteexpression;
 mod ivsteditcontroller;
+mod ivstattributes;
 
+pub use ivstattributes::*;
 pub use vsttypes::*;
 pub use ivstcomponent::*;
 pub use ivstparameterchanges::*;
