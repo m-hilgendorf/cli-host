@@ -1,6 +1,11 @@
 /// The contents of `vst3sdk/pluginterfaces`, ported to Rust 
-mod base;
+pub mod base;
+pub mod vst;
+pub mod gui;
 pub use self::base::*;
+pub use self::vst::*;
+pub use self::gui::*;
+
 use std::ptr::{NonNull,null_mut};
 use std::mem::forget;
 use super::Interface;
@@ -8,7 +13,6 @@ use std::fmt::{Debug, Error as FmtError, Formatter};
 use std::ops::Deref;
 
 // borrowed from the wio crate
-// todo: make this actually work 
 pub struct VstPtr<T: Interface>(NonNull<T>);
 impl<T> VstPtr<T> where T : Interface {
     pub unsafe fn from_raw(ptr : *mut T) -> Self {
@@ -16,7 +20,7 @@ impl<T> VstPtr<T> where T : Interface {
     }
     
     pub unsafe fn up <U>(self) -> VstPtr<U> where T: Deref<Target=U>, U: Interface {
-        unsafe { VstPtr::from_raw(self.into_raw() as *mut U) }
+         VstPtr::from_raw(self.into_raw() as *mut U)
     } 
 
     pub fn into_raw(self) -> *mut T {
