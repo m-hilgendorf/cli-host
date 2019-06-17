@@ -26,6 +26,7 @@ RIDL!{#[iid(0x5BC32507, 0xD06049EA, 0xA6151B52, 0x2B755B29)]
         fn onWheel(distance : f32,) -> tresult,
         fn onKeyDown(key : char16, keyCode : i16, modifiers : i16,) -> tresult,
         fn onKeyUp(key : char16, keyCode : i16, modifiers : i16, ) -> tresult,
+        fn getSize (size : *mut ViewRect,) -> tresult,
         fn onSize(newSize : *mut ViewRect,) -> tresult,
         fn onFocus(state : TBool,) -> tresult,
         fn setFrame(frame : *mut c_void,) -> tresult,

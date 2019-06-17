@@ -1,6 +1,7 @@
 use crate::pluginterfaces::base::*;
 use super::vsttypes::*;
 use crate::pluginterfaces::gui::*;
+use crate::pluginterfaces::kNoParentUnitId;
 
 // todo: kVstComponentControllerClass
 pub type KnobMode = i32;
@@ -22,14 +23,56 @@ pub mod KnobModes {
 #[repr(C)]
 #[repr(align(16))]
 pub struct ParameterInfo {
-    id : ParamID,
-    title : String128,
-    shortTitle : String128,
-    units : String128,
-    stepCount : i32,
-    defaultNormalizedValue : ParamValue,
-    unitId : UnitId,
-    flags : i32,
+    pub id         : ParamID,
+    pub title      : String128,
+    pub shortTitle : String128,
+    pub units      : String128,
+    pub stepCount  : i32,
+    pub defaultNormalizedValue : ParamValue,
+    pub unitId : UnitId,
+    pub flags  : i32,
+}
+
+impl Default for ParameterInfo {
+    fn default() -> Self {
+        Self {
+            id : kNoParamID,
+            title : [0; 128],
+            shortTitle : [0; 128],
+            units : [0; 128],
+            stepCount : -1,
+            defaultNormalizedValue : 0.0,
+            unitId : kNoParentUnitId,
+            flags : 0
+        }
+    }
+}
+use std::fmt;
+impl fmt::Debug for ParameterInfo {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        use widestring::U16CStr;
+        use std::mem::transmute;
+        unsafe {
+            write!(f, r#"
+    id : {}
+    title : {:?}
+    short title : {:?}
+    units : {:?}
+    step count : {}
+    default : {}
+    unit : {}
+    flags: {:x}
+    "#,
+        self.id,
+        U16CStr::from_ptr_str(std::mem::transmute(self.title.as_ptr())).to_string_lossy(),
+        U16CStr::from_ptr_str(std::mem::transmute(self.shortTitle.as_ptr())).to_string_lossy(),
+        U16CStr::from_ptr_str(std::mem::transmute(self.units.as_ptr())).to_string_lossy(),
+        self.stepCount,
+        self.defaultNormalizedValue,
+        self.unitId,
+        self.flags)
+        }
+    }
 }
 
 // todo: Vst::ViewType::kEditor = "editor"
@@ -75,9 +118,7 @@ RIDL! {#[iid(0xDCD7BBE3, 0x7742448D, 0xA874AACC, 0x979C759E)]
         fn getState (state : *mut IBStream,) -> tresult,
         fn getParameterCount () -> i32,
         fn getParameterInfo (index : i32, info : *mut ParameterInfo,) -> tresult,
-
-        //todo: double check the ABI for IEditController::getParamStringByValue
-        fn getParamStringByValue (id : ParamID, value : ParamValue, string : String128,) -> tresult,
+        fn getParamStringByValue (id : ParamID, value : ParamValue, string : *mut TChar,) -> tresult,
         fn getParamValueByString (id : ParamID, string : *mut TChar, value : *mut ParamValue,) -> tresult,
         fn normalizedParamToPlain (id : ParamID, normalized : ParamValue,) -> ParamValue,
         fn plainParamToNormalized (id : ParamID, plain : ParamValue,) -> ParamValue,

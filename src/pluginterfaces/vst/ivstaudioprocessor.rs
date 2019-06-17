@@ -9,8 +9,8 @@ use super::ivstparameterchanges::*;
 /// have to be in the same address space as the processor.
 /// Pretty much completely unsupported by any host.
 pub mod ComponentFlags {
-    pub const kDistributable : i32 = 1;
-    pub const kSimpleModesupported : i32 = 2;
+    pub const kDistributable       : i32 = 1;
+    pub const kSimpleModeSupported : i32 = 2;
 }
 
 /// Flags for representing f32/f64 processing modes
@@ -37,42 +37,42 @@ pub const kInfiniteTail : u32 = kMaxInt32u;
 #[repr(C)]
 #[repr(align(16))]
 pub struct ProcessSetup {
-    processMode : i32,
-    symbolicSampleSize : i32,
-    maxSamplesPerblock : i32,
-    sampleRate : f64
+    pub processMode        : i32,
+    pub symbolicSampleSize : i32,
+    pub maxSamplesPerblock : i32,
+    pub sampleRate         : f64
 }
 
 #[repr(C)]
 #[repr(align(16))]
 pub union AudioBusBuffersInner{
-    channelBuffers32 : *mut *mut f32,
-    channelBuffers64 : *mut *mut f64
+    pub channelBuffers32 : *mut *mut f32,
+    pub channelBuffers64 : *mut *mut f64
 }
 
 #[repr(C)]
 #[repr(align(16))]
 pub struct AudioBusBuffers {
-    numChannels : i32,
-    silenceFlags : u32,
-    buffers : AudioBusBuffersInner
+    pub numChannels  : i32,
+    pub silenceFlags : u32,
+    pub buffers      : AudioBusBuffersInner
 }
 
 #[repr(C)]
 #[repr(align(16))]
 pub struct ProcessData {
-    processMode : i32,
-    symbolicSampleSize : i32,
-    numSamples : i32,
-    numInputs : i32,
-    numOutputs : i32,
-    inputs : *mut AudioBusBuffers,
-    outputs : *mut AudioBusBuffers,
-    inputParameterChanges : *mut IParameterChanges,
-    outputParameterChanges : *mut IParameterChanges,
-    inputEvents : *mut IEventList,
-    outputEvents : *mut IEventList,
-    processContext : *mut ProcessContext,
+    pub processMode        : i32,
+    pub symbolicSampleSize : i32,
+    pub numSamples : i32,
+    pub numInputs  : i32,
+    pub numOutputs : i32,
+    pub inputs  : *mut AudioBusBuffers,
+    pub outputs : *mut AudioBusBuffers,
+    pub inputParameterChanges  : *mut IParameterChanges,
+    pub outputParameterChanges : *mut IParameterChanges,
+    pub inputEvents    : *mut IEventList,
+    pub outputEvents   : *mut IEventList,
+    pub processContext : *mut ProcessContext,
 }
 
 RIDL!{#[iid(0x42043F99, 0xB7DA453C, 0xA569E79D, 0x9AAEC33D)]
@@ -80,7 +80,7 @@ RIDL!{#[iid(0x42043F99, 0xB7DA453C, 0xA569E79D, 0x9AAEC33D)]
         fn setBusArrangements(inputs : *mut SpeakerArrangement, numIns : i32,
                               outputs : *mut SpeakerArrangement, numOuts : i32,)-> tresult,
         fn getBusArrangement (dir : BusDirection, index : i32, arr : *mut SpeakerArrangement,) -> tresult,
-        fn canProcesssampleSize(symbolixSampleSize : i32,) -> tresult,
+        fn canProcessSampleSize(symbolixSampleSize : i32,) -> tresult,
         fn getLatencySamples () -> i32,
         fn setupProcessing (setup : *mut ProcessSetup,) -> tresult,
         fn setProcessing (state : TBool,)-> tresult,

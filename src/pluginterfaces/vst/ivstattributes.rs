@@ -20,6 +20,5 @@ RIDL!{#[iid(0xD6CE2FFC, 0xEFAF4B8C, 0x9E74F1BB, 0x12DA44B4)]
     interface IStreamAttributes(IStreamAttributesVtbl) : FUnknown(FUnknownVtbl) {
         fn getFileName (name : String128,) -> tresult,
         fn getAttributes () -> *mut IAttributeList,
-
     }
 }

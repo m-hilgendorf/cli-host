@@ -10,7 +10,12 @@ license = "GPLv3"
 structopt  = "0.2.16"
 libloading = "0.5"
 widestring = "0.4.0"
+winit = "0.19.1"
 
 [features]
 default = []
 unicode = []
+
+[target.'cfg(all(unix, not(target_os = "macos")))'.dependencies]
+x11 = { version = "2.18.1", features = ["xlib", "glx"] }
+xcb = { version = "0.8.2", features = ["thread", "xlib_xcb", "dri2"] }
