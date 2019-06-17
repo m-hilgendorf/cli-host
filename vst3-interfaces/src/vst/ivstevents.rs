@@ -1,7 +1,7 @@
 use super::ivstprocesscontext::*;
 use super::ivstnoteexpression::*;
-use crate::pluginterfaces::vst::TQuarterNotes;
-use crate::pluginterfaces::base::*;
+use crate::vst::TQuarterNotes;
+use crate::base::*;
 use super::vsttypes::*;
 
 #[repr(C)]

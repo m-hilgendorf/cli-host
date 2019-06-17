@@ -1,11 +1,11 @@
 #![allow(non_upper_case_globals)]
 
-use crate::pluginterfaces::base::*;
+use crate::base::*;
 use super::vsttypes::*;
 
 //todo: kDefaultFactoryFlags
 
-use crate::pluginterfaces::vst::MediaType;
+use crate::vst::MediaType;
 pub mod MediaTypes {
     pub const kAudio : i32 = 0;
     pub const kEvent: i32 = 1;

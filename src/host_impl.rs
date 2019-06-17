@@ -1,4 +1,4 @@
-use crate::pluginterfaces::*;
+use crate::*;
 use std::ptr::null_mut;
 use widestring::{WideCStr, U16Str};
 
@@ -206,11 +206,13 @@ impl PlugView {
         if e != 0 { Err(e) }
         else { Ok(rect) }
     }
+
     pub fn removed(&self)-> Result<(), tresult> {
         let e = unsafe { self.0.removed() };
         if e != 0 { Err(e) }
         else { Ok(())}
     }
+
     pub fn set_frame(&self, frame : *mut IPlugFrame) {
     //    unsafe { self.0.setFrame(frame.as_raw() as *mut _) };
         unsafe { self.0.setFrame(frame as *mut _) };

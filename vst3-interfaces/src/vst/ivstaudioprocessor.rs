@@ -1,4 +1,4 @@
-use crate::pluginterfaces::base::*;
+use crate::base::*;
 use super::ivstcomponent::*;
 use super::vsttypes::*;
 use super::ivstprocesscontext::*;

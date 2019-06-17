@@ -1,7 +1,7 @@
-use crate::pluginterfaces::base::*;
+use crate::base::*;
 use super::vsttypes::*;
-use crate::pluginterfaces::gui::*;
-use crate::pluginterfaces::kNoParentUnitId;
+use crate::gui::*;
+use crate::kNoParentUnitId;
 
 // todo: kVstComponentControllerClass
 pub type KnobMode = i32;

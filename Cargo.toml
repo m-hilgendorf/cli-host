@@ -11,7 +11,7 @@ structopt  = "0.2.16"
 libloading = "0.5"
 widestring = "0.4.0"
 winit = "0.19.1"
-
+vst3-interfaces = {path = "./vst3-interfaces"}
 [features]
 default = []
 unicode = []

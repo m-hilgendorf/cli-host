@@ -1,4 +1,7 @@
-/// The contents of `vst3sdk/pluginterfaces`, ported to Rust 
+/// The contents of `vst3sdk/pluginterfaces`, ported to Rust
+#[macro_use]
+mod macros;
+
 pub mod base;
 pub mod vst;
 pub mod gui;
@@ -8,10 +11,12 @@ pub use self::gui::*;
 
 use std::ptr::{NonNull,null_mut};
 use std::mem::forget;
-use super::Interface;
 use std::fmt::{Debug, Error as FmtError, Formatter};
 use std::ops::Deref;
-
+pub trait Interface {
+    // Returns the IID of the Interface
+    fn iid() -> TUID;
+}
 // borrowed from the wio crate
 pub struct VstPtr<T: Interface>(NonNull<T>);
 impl<T> VstPtr<T> where T : Interface {

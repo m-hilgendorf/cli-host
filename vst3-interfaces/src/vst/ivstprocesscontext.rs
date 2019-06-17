@@ -1,6 +1,6 @@
 #![allow(non_upper_case_globals)]
 use super::vsttypes::*;
-use crate::pluginterfaces::*;
+use crate::*;
 
 pub mod FrameRateFlags {
     pub const kPullDownRate : u32 = 0;

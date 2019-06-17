@@ -56,7 +56,7 @@ macro_rules! RIDL {
     );
 
     (@deref $interface:ident $pinterface:ident) => (
-        impl $crate::_core::ops::Deref for $interface {
+        impl core::ops::Deref for $interface {
             type Target = $pinterface;
             #[inline]
             fn deref(&self) -> &$pinterface {
@@ -122,7 +122,7 @@ macro_rules! RIDL {
     ) => (
         impl $crate::Interface for $interface {
             #[inline]
-            fn iid() -> $crate::pluginterfaces::TUID {
+            fn iid() -> $crate::TUID {
                 let bytes : [u32; 4] = [$w0, $w1, $w2, $w3];
                 let mut tuid  : [i8; 16] = [0;16];
                 for i in 0..4 {

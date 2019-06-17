@@ -1,7 +1,7 @@
 #![allow(non_upper_case_globals)]
 
 // todo: vst3 version defines
-use crate::pluginterfaces::base::*;
+use crate::base::*;
 
 pub type TChar = char16;
 pub type String128 = [TChar; 128];

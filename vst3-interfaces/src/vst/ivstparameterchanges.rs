@@ -1,5 +1,5 @@
 use super::vsttypes::*;
-use crate::pluginterfaces::base::*;
+use crate::base::*;
 
 RIDL!{#[iid(0x01263A18, 0xED074F6F, 0x98C9D356, 0x4686F9BA)]
     interface IParamValueQueue(IParamValueQueueVtbl) : FUnknown(FUnknownVtbl) {

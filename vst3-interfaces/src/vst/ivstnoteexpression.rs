@@ -1,6 +1,6 @@
 #![allow(non_upper_case_globals)]
 
-use crate::pluginterfaces::base::*;
+use crate::base::*;
 use super::vsttypes::*;
 
 pub type NoteExpressionTypeID = u32;

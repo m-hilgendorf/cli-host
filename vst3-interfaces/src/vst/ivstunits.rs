@@ -1,4 +1,4 @@
-use crate::pluginterfaces::base::*;
+use crate::base::*;
 use super::vsttypes::*;
 
 pub const kRootUnitId     : UnitId        = 0;

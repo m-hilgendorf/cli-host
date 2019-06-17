@@ -4,10 +4,11 @@
 #![allow(unused_imports)]
 use core as _core;
 
+/*
 #[macro_use]
 mod macros;
 mod pluginterfaces;
-
+*/
 #[macro_use]
 extern crate structopt;
 extern crate libloading as ll;
@@ -23,17 +24,14 @@ use std::mem::{forget};
 use std::ptr::null_mut;
 use std::ops::Deref;
 use std::sync::mpsc::TrySendError::Full;
-use pluginterfaces::*;
-use crate::pluginterfaces::vst::SymbolicSampleSizes::{kSample32, kSample64};
+use vst3_interfaces::*;
+use vst3_interfaces::vst::SymbolicSampleSizes::{kSample32, kSample64};
 
 mod host_impl;
 use host_impl::*;
 use winit::os::unix::WindowExt;
 
-pub trait Interface {
-    // Returns the IID of the Interface
-    fn iid() -> pluginterfaces::TUID;
-}
+
 
 #[derive(StructOpt, Debug)]
 #[structopt(name = "cli-host")]
