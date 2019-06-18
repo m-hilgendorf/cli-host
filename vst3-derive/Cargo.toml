@@ -1,0 +1,15 @@
+[package]
+name = "vst3-derive"
+version = "0.1.0"
+authors = ["Mike Hilgendorf <mike@hilgendorf.audio>"]
+edition = "2018"
+description = "Macros for implenting VST3 interfaces in Rust"
+
+[lib]
+name = "vst3_derive"
+proc-macro = true
+
+[dependencies]
+syn = { version = "0.15.36", features = ["full"] }
+quote = { version = "0.6.12", features = ["proc-macro"] }
+proc-macro2 = "0.4.20"

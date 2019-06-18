@@ -13,6 +13,18 @@ use std::ptr::{NonNull,null_mut};
 use std::mem::forget;
 use std::fmt::{Debug, Error as FmtError, Formatter};
 use std::ops::Deref;
+
+pub fn is_iid_equal(iid1 : *const i8, iid2 : *const i8) -> bool {
+    for i in 0..16 {
+        unsafe {
+            if *iid1.offset(i) != *iid2.offset(i) {
+                return false;
+            }
+        }
+    }
+    true
+}
+
 pub trait Interface {
     // Returns the IID of the Interface
     fn iid() -> TUID;

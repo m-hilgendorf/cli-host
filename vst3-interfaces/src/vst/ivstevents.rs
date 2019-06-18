@@ -79,6 +79,7 @@ pub struct LegacyMidiCCOutEvent {
 
 #[repr(C)]
 #[repr(align(16))]
+#[derive(Copy, Clone)]
 pub union EventUnion {
     noteOn : NoteOnEvent,
     noteOff : NoteOffEvent,
@@ -105,6 +106,7 @@ pub mod EventTypes {
 
 #[repr(C)]
 #[repr(align(16))]
+#[derive(Copy,Clone)]
 pub struct Event {
     busIndex : i16,
     sampleOffset : i32,

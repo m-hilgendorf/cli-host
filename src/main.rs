@@ -31,8 +31,6 @@ mod host_impl;
 use host_impl::*;
 use winit::os::unix::WindowExt;
 
-
-
 #[derive(StructOpt, Debug)]
 #[structopt(name = "cli-host")]
 struct Opt {
@@ -59,7 +57,9 @@ fn open (controller : Editor) {
                 1)
         };
         if atom == 0 { panic!("XEMBED_INFO does not exist"); }
-       // view.set_frame(null_mut());
+        let frame = HostPlugFrame::new();
+
+        view.set_frame(frame.as_raw());
         view.attached (display)
             .expect("failed to attach to platform handle");
 

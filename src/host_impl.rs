@@ -1,6 +1,8 @@
 use crate::*;
 use std::ptr::null_mut;
 use widestring::{WideCStr, U16Str};
+use vst3_impl::*;
+use vst3_derive::*;
 
 pub enum ProcessMode { RealTime, PreFetch, Offline }
 pub enum SampleSize { F32, F64 }
@@ -216,5 +218,31 @@ impl PlugView {
     pub fn set_frame(&self, frame : *mut IPlugFrame) {
     //    unsafe { self.0.setFrame(frame.as_raw() as *mut _) };
         unsafe { self.0.setFrame(frame as *mut _) };
+    }
+}
+
+#[repr(C)]
+#[derive(Vst3Impl)]
+#[interfaces(IPlugFrame)]
+pub struct HostPlugFrame {
+    vtbl : VTable<IPlugFrameVtbl>,
+    refcount : Refcount
+}
+
+impl HostPlugFrame {
+    pub fn new() -> VstPtr<IPlugFrame> {
+        let ptr = HostPlugFrame::create_raw();
+        let ptr = ptr as *mut IPlugFrame;
+        unsafe { VstPtr::from_raw(ptr) }
+    }
+}
+
+#[vst3_impl]
+unsafe impl IPlugFrame for HostPlugFrame {
+    fn resizeView(&self, view : *mut IPlugView, newSize : *mut ViewRect) -> tresult{
+        println!("view: {:?}", view);
+        let size  = unsafe { &*newSize };
+        println!("size: {},{},{},{}", size.top, size.bottom, size.left, size.right);
+        0
     }
 }
