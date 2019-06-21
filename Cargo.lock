@@ -123,8 +123,8 @@ version = "0.1.0"
 dependencies = [
  "libloading 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "structopt 0.2.16 (registry+https://github.com/rust-lang/crates.io-index)",
+ "vst3 0.1.0",
  "vst3-derive 0.1.0",
- "vst3-host-boilerplate 0.1.0",
  "vst3-impl 0.1.0",
  "vst3-interfaces 0.1.0",
  "widestring 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -662,22 +662,22 @@ version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "vst3-derive"
-version = "0.1.0"
-dependencies = [
- "proc-macro2 0.4.30 (registry+https://github.com/rust-lang/crates.io-index)",
- "quote 0.6.12 (registry+https://github.com/rust-lang/crates.io-index)",
- "syn 0.15.36 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
-name = "vst3-host-boilerplate"
+name = "vst3"
 version = "0.1.0"
 dependencies = [
  "vst3-derive 0.1.0",
  "vst3-impl 0.1.0",
  "vst3-interfaces 0.1.0",
  "widestring 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "vst3-derive"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2 0.4.30 (registry+https://github.com/rust-lang/crates.io-index)",
+ "quote 0.6.12 (registry+https://github.com/rust-lang/crates.io-index)",
+ "syn 0.15.36 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]

@@ -1,0 +1,11 @@
+[package]
+name = "vst3"
+version = "0.1.0"
+authors = ["m-hilgendorf <mike@hilgendorf.audio>"]
+edition = "2018"
+
+[dependencies]
+vst3-interfaces = {path = "./vst3-interfaces"}
+vst3-derive = { path = "./vst3-derive" }
+vst3-impl = { path = "./vst3-impl" }
+widestring = "0.4.0"

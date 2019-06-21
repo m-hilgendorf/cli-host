@@ -148,7 +148,7 @@ impl<T> ComponentHandlerImpl<T>
 
 #[vst3_impl]
 unsafe impl<T> IComponentHandler for ComponentHandlerImpl<T>
-  where T: ComponentHandler {
+    where T: ComponentHandler {
     fn beginEdit(&mut self, id : ParamID) -> tresult {
         if let Err(e) = self.pimpl.begin_edit(id) {
             e
@@ -190,7 +190,7 @@ impl<T> ComponentHandler2Impl<T>
 
 #[vst3_impl]
 unsafe impl<T> IComponentHandler2 for ComponentHandler2Impl <T>
-  where T: ComponentHandler2 {
+    where T: ComponentHandler2 {
     fn setDirty(&mut self, state : TBool) -> tresult {
         if let Err(e) = self.pimpl.set_dirty (state == 0) {
             e
