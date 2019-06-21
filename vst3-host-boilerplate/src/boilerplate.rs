@@ -214,18 +214,52 @@ unsafe impl<T> IComponentHandler2 for ComponentHandler2Impl <T>
     }
 }
 
-#[doc(hidden)]
 #[repr(C)]
 #[derive(Vst3Impl)]
-#[interfaces(IComponentHandler2)]
-pub struct EventListImpl<T: EventList> {
-    vtbl     : VTable<IEventListVtbl>,
+#[interfaces(IPluginFactory)]
+pub struct PluginFactoryImpl <T> where T: PluginFactory {
+    vtbl     : VTable <IPluginFactoryVtbl>,
     refcount : Refcount,
     pimpl    : T
 }
 
-impl<T: EventList> EventListImpl<T> {
-    fn new(pimpl : T) -> VstPtr<IEventList> {
+impl<T> PluginFactoryImpl<T>
+    where T: PluginFactory {
+    pub fn new(pimpl : T) -> VstPtr<IPluginFactory> {
+        unsafe { VstPtr::from_raw(Self::create_raw(pimpl) as *mut _) }
+    }
+}
 
+#[vst3_impl]
+unsafe impl<T: PluginFactory> IPluginFactory for PluginFactoryImpl<T> {
+    fn getFactoryInfo (&self, pinfo : *mut PFactoryInfo,) -> tresult {
+        match self.pimpl.get_factory_info() {
+            Ok(info) => {
+                unsafe { *pinfo = info };
+                0
+            },
+            Err(e) => e
+        }
+    }
+    fn countClasses(&self) -> i32 {
+        self.pimpl.count_classes() as i32
+    }
+    fn getClassInfo(&self, index : i32, pinfo : *mut PClassInfo,) -> tresult {
+        match self.pimpl.get_class_info(index as usize) {
+            Ok(info) => {
+                unsafe { *pinfo = info };
+                0
+            }
+            Err(e) => e
+        }
+    }
+    fn createInstance(&mut self, cid : FIDString, iid : FIDString, obj : *mut *mut c_void,) -> tresult {
+        match self.pimpl.create_instance(cid, iid) {
+            Ok(ptr) => {
+                unsafe { *obj = ptr };
+                0
+            }
+            Err(e) => e
+        }
     }
 }

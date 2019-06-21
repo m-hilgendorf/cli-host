@@ -13,7 +13,7 @@ winit = "0.19.1"
 vst3-interfaces = {path = "./vst3-interfaces"}
 vst3-derive = { path = "./vst3-derive" }
 vst3-impl = { path = "./vst3-impl" }
-#vst3-host-boilerplate = { path = "./vst3-host-boilerplate"}
+vst3-host-boilerplate = { path = "./vst3-host-boilerplate"}
 widestring = "0.4.0"
 
 [features]

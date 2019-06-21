@@ -9,6 +9,13 @@ use std::cmp::min;
 #[doc(hidden)]
 pub mod boilerplate;
 
+pub trait PluginFactory {
+    fn get_factory_info(&self) -> Result<PFactoryInfo, tresult>;
+    fn count_classes(&self) -> usize;
+    fn get_class_info(&self, idx : usize) -> Result<PClassInfo, tresult>;
+    fn create_instance (&mut self, cid : FIDString, iid : FIDString) -> Result<*mut c_void, tresult>;
+}
+
 /// Enum variant for AttributeList
 pub enum AttributeValue<'a> {
     Float(f64),
