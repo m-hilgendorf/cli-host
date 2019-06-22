@@ -13,7 +13,7 @@ pub use self::vst::*;
 
 use std::fmt::{Debug, Error as FmtError, Formatter};
 use std::mem::forget;
-use std::ops::Deref;
+use std::ops::{Deref, DerefMut};
 use std::ptr::{null_mut, NonNull};
 
 pub fn is_iid_equal(iid1: *const i8, iid2: *const i8) -> bool {
@@ -33,6 +33,9 @@ pub trait Interface {
 }
 // borrowed from the wio crate
 pub struct VstPtr<T: Interface>(NonNull<T>);
+unsafe impl<T:Interface> Send for VstPtr<T>{}
+unsafe impl<T:Interface> Sync for VstPtr<T>{}
+
 impl<T> VstPtr<T>
 where
     T: Interface,
@@ -90,7 +93,14 @@ where
         unsafe { &*self.as_raw() }
     }
 }
-
+impl<T> DerefMut for VstPtr<T>
+where
+    T: Interface,
+{
+    fn deref_mut(&mut self) -> &mut T {
+        unsafe { &mut *self.as_raw() }
+    }
+}
 impl<T> Clone for VstPtr<T>
 where
     T: Interface,
