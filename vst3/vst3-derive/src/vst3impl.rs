@@ -82,7 +82,7 @@ impl<'a> Vst3Impl<'a> {
         if self.has_parent {
             quote! { parent: <Self as vst3_impl::BuildVTable<_>>::VTBL, }
         } else {
-            quote!{}
+            quote! {}
         }
     }
 
@@ -209,7 +209,7 @@ impl<'a> Vst3Function<'a> {
         let unsafemod = if self.is_unsafe {
             quote! { unsafe }
         } else {
-            quote!{}
+            quote! {}
         };
 
         let abi = &self.abi;
@@ -313,7 +313,7 @@ impl<'a> Vst3Function<'a> {
                 "User-implemented COM method for {}::{} panicked. Aborting!",
                 context.vst3_ty_name, self.vst3_name,
             )
-                .as_bytes(),
+            .as_bytes(),
             Span::call_site(),
         )
     }
@@ -385,9 +385,9 @@ impl<'a> Vst3Function<'a> {
                 let meta = attr.parse_meta().map_err(|e| e.to_string())?;
                 match &meta {
                     Meta::NameValue(MetaNameValue {
-                                        lit: Lit::Str(name),
-                                        ..
-                                    }) => return Ok(Ident::new(&name.value(), name.span())),
+                        lit: Lit::Str(name),
+                        ..
+                    }) => return Ok(Ident::new(&name.value(), name.span())),
                     _ => return Err("Invalid syntax for #[vst3_name] attribute".into()),
                 }
             } else if attr.path.segments.len() != 1 || attr.path.segments[0].ident != "panic" {
@@ -442,16 +442,16 @@ impl<'a> Vst3Function<'a> {
                     return Ok(OnPanic::Abort);
                 }
                 NestedMeta::Meta(Meta::NameValue(MetaNameValue {
-                                                     ident,
-                                                     lit: Lit::Str(lit),
-                                                     ..
-                                                 })) if ident == "result" => {
+                    ident,
+                    lit: Lit::Str(lit),
+                    ..
+                })) if ident == "result" => {
                     let expr: Expr = match syn::parse_str(&lit.value()) {
                         Ok(expr) => expr,
                         Err(e) => return Err(format!("Error parsing #[panic] attribute: {}", e)),
                     };
 
-                    let expr = quote_spanned!{lit.span()=> { #expr }};
+                    let expr = quote_spanned! {lit.span()=> { #expr }};
                     return Ok(OnPanic::Hresult(Box::new(expr)));
                 }
                 _ => {

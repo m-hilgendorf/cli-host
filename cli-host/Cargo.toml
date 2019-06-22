@@ -1,0 +1,25 @@
+[package]
+name = "cli-host"
+description = "Host a VST3 plugin from the command line"
+version = "0.1.0"
+authors = ["Mike Hilgendorf <mike@hilgendorf.audio>"]
+edition = "2018"
+license = "GPLv3"
+
+[dependencies]
+structopt  = "0.2.16"
+libloading = "0.5"
+winit = "0.19.1"
+vst3-interfaces = {path = "../vst3/vst3-interfaces"}
+vst3-derive = { path = "../vst3/vst3-derive" }
+vst3-impl = { path = "../vst3/vst3-impl" }
+vst3 = { path = "../vst3"}
+widestring = "0.4.0"
+
+[features]
+default = []
+unicode = []
+
+[target.'cfg(all(unix, not(target_os = "macos")))'.dependencies]
+x11 = { version = "2.18.1", features = ["xlib", "glx"] }
+xcb = { version = "0.8.2", features = ["thread", "xlib_xcb", "dri2"] }

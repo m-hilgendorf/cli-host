@@ -1,4 +1,4 @@
-// todo: modify to be more compatible with VST3, less windows focused 
+// todo: modify to be more compatible with VST3, less windows focused
 // From the winapi crate
 //
 // Licensed under the Apache License, Version 2.0

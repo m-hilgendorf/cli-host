@@ -1,59 +1,60 @@
-use crate::base::*;
 use super::vsttypes::*;
+use crate::base::*;
 use crate::gui::*;
 use crate::kNoParentUnitId;
 
 // todo: kVstComponentControllerClass
 pub type KnobMode = i32;
 pub mod ParameterFlags {
-    pub const kNoFlags : i32 = 0;
-    pub const kCanAutomate : i32 = 1;
-    pub const kIsReadonly : i32 = 1 << 1;
+    pub const kNoFlags: i32 = 0;
+    pub const kCanAutomate: i32 = 1;
+    pub const kIsReadonly: i32 = 1 << 1;
     pub const kIsWrapAaround: i32 = 1 << 2;
-    pub const kIsProgramChange : i32 = 1 << 15;
-    pub const kIsBypass : i32 = 1 << 16;
+    pub const kIsProgramChange: i32 = 1 << 15;
+    pub const kIsBypass: i32 = 1 << 16;
 }
 
 pub mod KnobModes {
-    pub const kCircularMode : i32 = 0;
-    pub const kRelativCircularMode : i32 = 1;
-    pub const kLinearMode : i32 = 2;
+    pub const kCircularMode: i32 = 0;
+    pub const kRelativCircularMode: i32 = 1;
+    pub const kLinearMode: i32 = 2;
 }
 
 #[repr(C)]
 #[repr(align(16))]
 pub struct ParameterInfo {
-    pub id         : ParamID,
-    pub title      : String128,
-    pub shortTitle : String128,
-    pub units      : String128,
-    pub stepCount  : i32,
-    pub defaultNormalizedValue : ParamValue,
-    pub unitId : UnitId,
-    pub flags  : i32,
+    pub id: ParamID,
+    pub title: String128,
+    pub shortTitle: String128,
+    pub units: String128,
+    pub stepCount: i32,
+    pub defaultNormalizedValue: ParamValue,
+    pub unitId: UnitId,
+    pub flags: i32,
 }
 
 impl Default for ParameterInfo {
     fn default() -> Self {
         Self {
-            id : kNoParamID,
-            title : [0; 128],
-            shortTitle : [0; 128],
-            units : [0; 128],
-            stepCount : -1,
-            defaultNormalizedValue : 0.0,
-            unitId : kNoParentUnitId,
-            flags : 0
+            id: kNoParamID,
+            title: [0; 128],
+            shortTitle: [0; 128],
+            units: [0; 128],
+            stepCount: -1,
+            defaultNormalizedValue: 0.0,
+            unitId: kNoParentUnitId,
+            flags: 0,
         }
     }
 }
 use std::fmt;
+use widestring::U16CStr;
 impl fmt::Debug for ParameterInfo {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        use widestring::U16CStr;
-        use std::mem::transmute;
         unsafe {
-            write!(f, r#"
+            write!(
+                f,
+                r#"
     id : {}
     title : {:?}
     short title : {:?}
@@ -63,29 +64,31 @@ impl fmt::Debug for ParameterInfo {
     unit : {}
     flags: {:x}
     "#,
-        self.id,
-        U16CStr::from_ptr_str(std::mem::transmute(self.title.as_ptr())).to_string_lossy(),
-        U16CStr::from_ptr_str(std::mem::transmute(self.shortTitle.as_ptr())).to_string_lossy(),
-        U16CStr::from_ptr_str(std::mem::transmute(self.units.as_ptr())).to_string_lossy(),
-        self.stepCount,
-        self.defaultNormalizedValue,
-        self.unitId,
-        self.flags)
+                self.id,
+                U16CStr::from_ptr_str(std::mem::transmute(self.title.as_ptr())).to_string_lossy(),
+                U16CStr::from_ptr_str(std::mem::transmute(self.shortTitle.as_ptr()))
+                    .to_string_lossy(),
+                U16CStr::from_ptr_str(std::mem::transmute(self.units.as_ptr())).to_string_lossy(),
+                self.stepCount,
+                self.defaultNormalizedValue,
+                self.unitId,
+                self.flags
+            )
         }
     }
 }
 
 // todo: Vst::ViewType::kEditor = "editor"
 pub mod RestartFlags {
-    pub const kReloadComponent : i32 = 1 << 0;
-    pub const kIoChanges : i32 = 1 << 1;
-    pub const kParamValuesChanged : i32 = 1 << 2;
-    pub const kLatencyChanged : i32 = 1 << 3;
-    pub const kParamTitlesChanged : i32 = 1 << 4;
-    pub const kMidiCCAssignmentChanged : i32 = 1 << 5;
-    pub const kNoteExpressionChanged : i32 = 1 << 6;
-    pub const kIoTitlesChanged : i32 = 1 << 7;
-    pub const kPrefetchableSupportChanged : i32 = 1 << 8;
+    pub const kReloadComponent: i32 = 1 << 0;
+    pub const kIoChanges: i32 = 1 << 1;
+    pub const kParamValuesChanged: i32 = 1 << 2;
+    pub const kLatencyChanged: i32 = 1 << 3;
+    pub const kParamTitlesChanged: i32 = 1 << 4;
+    pub const kMidiCCAssignmentChanged: i32 = 1 << 5;
+    pub const kNoteExpressionChanged: i32 = 1 << 6;
+    pub const kIoTitlesChanged: i32 = 1 << 7;
+    pub const kPrefetchableSupportChanged: i32 = 1 << 8;
     pub const kRoutingInfoChanged: i32 = 1 << 9;
 }
 
@@ -97,7 +100,7 @@ RIDL! {#[iid(0x93A0BEA3, 0x0BD045DB, 0x8E890B0C, 0xC1E46AC6)]
         fn restartComponent(flags : i32,) -> tresult,
     }
 }
-RIDL!{ #[iid(0xF040B4B3, 0xA36045EC, 0xABCDC045, 0xB4D5A2CC)]
+RIDL! { #[iid(0xF040B4B3, 0xA36045EC, 0xABCDC045, 0xB4D5A2CC)]
     interface IComponentHandler2(IComponentHandler2Vtbl) : FUnknown(FUnknownVtbl) {
         fn setDirty(state :TBool,) -> tresult,
         // todo: verify that adhoc polymorphism doesn't break this smh

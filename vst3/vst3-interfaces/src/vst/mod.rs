@@ -1,22 +1,22 @@
 #![allow(non_upper_case_globals)]
-mod vsttypes;
-mod ivstevents;
-mod ivstcomponent;
-mod ivstparameterchanges;
-mod ivstaudioprocessor;
-mod ivstprocesscontext;
-mod ivstnoteexpression;
-mod ivsteditcontroller;
 mod ivstattributes;
+mod ivstaudioprocessor;
+mod ivstcomponent;
+mod ivsteditcontroller;
+mod ivstevents;
+mod ivstnoteexpression;
+mod ivstparameterchanges;
+mod ivstprocesscontext;
 mod ivstunits;
+mod vsttypes;
 
 pub use ivstattributes::*;
-pub use vsttypes::*;
-pub use ivstcomponent::*;
-pub use ivstparameterchanges::*;
-pub use ivstevents::*;
 pub use ivstaudioprocessor::*;
-pub use ivstprocesscontext::*;
-pub use ivstnoteexpression::*;
+pub use ivstcomponent::*;
 pub use ivsteditcontroller::*;
+pub use ivstevents::*;
+pub use ivstnoteexpression::*;
+pub use ivstparameterchanges::*;
+pub use ivstprocesscontext::*;
 pub use ivstunits::*;
+pub use vsttypes::*;
