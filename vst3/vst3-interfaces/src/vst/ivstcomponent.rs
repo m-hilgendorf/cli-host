@@ -48,7 +48,7 @@ pub struct RoutingInfo {
 }
 RIDL! {#[iid(0xE831FF31, 0xE831FF31, 0x928EBBEE, 0x25697802)]
     interface IComponent(IComponentVtbl) : IPluginBase(IPluginBaseVtbl) {
-        fn getControllerClassID(classId : TUID,) -> tresult,
+        fn getControllerClassID(classId : *mut char8,) -> tresult,
         fn setIoMode (mode : IoMode,) -> tresult,
         fn getBusCount(type_ : MediaType, dir : BusDirection,) -> i32,
         //todo: write tests for functions that take C++ references instead of C pointers

@@ -1,30 +1,4 @@
-//! Copyright 2019 Michael Hilgendorf <mike@hilgendorf.audio>
-//! Copyright 2008-2019 Steinberg Media Technologies, GMBH
-//!
-//! Licensed under the terms of the GNU General Public License (GPLv3) which
-//! can be found [here]();
-//!
-//! The `vst3` crate is a port of the VST3 SDK developed by Steinberg Media
-//! Technologies for creating audio plugins.
-//!
-//! This is somewhere between a work in progress and proof of concept that VST3 can be
-//! ported to pure Rust from the pure C++ API.
-//!
-//! VST3 plugins need to be compiled as shared libraries (`cstdlib` in your `Cargo.toml`)
-//! The shared library must have a single entry point defined as follows:
-//!
-//! ```rust
-//! use vst3_interfaces::IPluginFactory;
-//! pub extern "system" fn GetPluginFactory() -> *mut IPluginFactory {
-//!     /* ... */
-//! }
-//! ```
-//!
-//! On licensing: this is not a clean room re-implementation of the VST3 API, it was
-//! developed with full knowledge and use of the original VST3 API and its documentation.
-//! The original API is distributed under a dual proprietary/GPL license, and this is distributed
-//! under the latter to comply.
-
+#![allow(unused_imports)]
 use std::cmp::min;
 use std::ffi::CStr;
 use std::mem::transmute;
@@ -33,67 +7,26 @@ use std::ptr::copy_nonoverlapping as memcpy;
 use vst3_interfaces::*;
 use widestring::{U16CStr, U16String};
 
+pub use vst3_interfaces::*;
 #[doc(hidden)]
 pub mod boilerplate;
 
-/// The plugin factory is the main interface for the shared library,
-/// it controls the listing and constructing of objects by the host.
 pub trait PluginFactory {
-    /// Return information about the plugin factory
     fn get_factory_info(&self) -> Result<PFactoryInfo, tresult>;
-    /// return the number of classes this factory can construct
     fn count_classes(&self) -> usize;
-    /// Get information about a particular class
     fn get_class_info(&self, idx: usize) -> Result<PClassInfo, tresult>;
-    /// Create an instance of a specific class
     fn create_instance(&mut self, cid: FIDString, iid: FIDString) -> Result<*mut c_void, tresult>;
+    fn get_class_info2(&self) -> Result<PClassInfo2, tresult>;
 }
-
-/// Enum variant for AttributeList
-pub enum AttributeValue<'a> {
-    Float(f64),
-    Int(i64),
-    String(&'a str),
-    Binary(&'a [u8]),
-}
-
-/// Provides an interface for getting/setting variables
-/// in the host using key/value pairs
-pub trait AttributeList {
-    /// Set an attribute (key/value pair)
-    fn set(&mut self, id: &str, value: AttributeValue) -> Result<(), tresult>;
-    /// Get an attribute (key/value pair);
-    fn get<'a>(&self, id: &str) -> Result<AttributeValue<'a>, tresult>;
-    fn iid() -> TUID {
-        IAttributeList::iid()
-    }
-}
-
-/// The `ComponentHandler` interface alerts the host about changes to the
-/// plugin parameters/state originating from the `EditController` instance.
 pub trait ComponentHandler {
-    /// Call before changing a parameter
     fn begin_edit(&mut self, id: ParamID) -> Result<(), tresult>;
-    /// Call when finished changing a parameter
     fn end_edit(&mut self, id: ParamID) -> Result<(), tresult>;
-    /// Call to change a parameter.
     fn perform_edit(&mut self, id: ParamID, normalized: f64) -> Result<(), tresult>;
-    /// Used to alert the host for other changes, like a different parameter layout
-    /// or bus changes.
     fn restart_component(&mut self, flags: i32) -> Result<(), tresult>;
-    fn iid() -> TUID {
-        IComponentHandler::iid()
-    }
-}
-
-pub trait ComponentHandler2 {
     fn set_dirty(&mut self, is_dirty: bool) -> Result<(), tresult>;
     fn request_open_editor(&mut self) -> Result<(), tresult>;
     fn start_group_edit(&mut self) -> Result<(), tresult>;
     fn finish_group_edit(&mut self) -> Result<(), tresult>;
-    fn iid() -> TUID {
-        IComponentHandler::iid()
-    }
 }
 
 pub trait EventList {
@@ -102,23 +35,78 @@ pub trait EventList {
     fn add_event(&mut self, event: Event) -> Result<(), tresult>;
 }
 
-pub trait HostApplication {}
+pub trait PluginBase {
+    fn initialize(&mut self, host: VstPtr<FUnknown>) -> Result<(), tresult>;
+    fn terminate(&mut self) -> Result<(), tresult>;
+}
 
-pub trait ComponentHandlerBusActivation {}
+pub trait Component {
+    fn set_io_mode(&mut self, id: i32) -> Result<(), tresult>;
+    fn get_bus_count(&self, media: MediaType, dir: BusDirection) -> usize;
+    fn get_bus_info(
+        &self,
+        media: MediaType,
+        dir: BusDirection,
+        idx: usize,
+    ) -> Result<BusInfo, tresult>;
+    fn get_routing_info(
+        &self,
+        inpt: &mut RoutingInfo,
+        outp: &mut RoutingInfo,
+    ) -> Result<(), tresult>;
+    fn activate_bus(
+        &mut self,
+        media: MediaType,
+        dir: BusDirection,
+        idx: usize,
+        state: bool,
+    ) -> Result<(), tresult>;
+    fn set_active(&mut self, state: bool) -> Result<(), tresult>;
+    fn set_state(&mut self, str: VstPtr<IBStream>) -> Result<(), tresult>;
+    fn get_state(&mut self, str: VstPtr<IBStream>) -> Result<(), tresult>;
+}
 
-pub trait Message {}
+pub trait AudioProcessor {
+    fn set_bus_arrangements(
+        &self,
+        ins: &[SpeakerArrangement],
+        outs: &[SpeakerArrangement],
+    ) -> Result<(), tresult>;
+    fn get_bus_arrangement(
+        &self,
+        dir: BusDirection,
+        idx: usize,
+    ) -> Result<SpeakerArrangement, tresult>;
+    fn can_do_32(&self) -> bool {
+        true
+    }
+    fn can_do_64(&self) -> bool {
+        false
+    }
+    fn setup_processing(&mut self, setup: &ProcessSetup) -> Result<(), tresult>;
+    fn set_processing(&mut self, state: bool) -> Result<(), tresult>;
+    fn process(&mut self, data: &mut ProcessData) -> Result<(), tresult>;
+    fn get_latency_samples(&self) -> u32;
+    fn get_tail_samples(&self) -> u32;
+}
 
-pub trait ParamValueQueue {}
-
-pub trait ParameterChanges {}
-
-pub trait UnitHandler {}
-
-pub trait PlugFrame {}
-
-/*
-todo: pub trait StreamAttributes {}
-todo: pub trait InfoListener {}
-todo: pub trait ContextMenu {}
-todo: pub trait ContextMenuTarget{}
-*/
+pub trait EditController {
+    fn set_component_state(&mut self, state: VstPtr<IBStream>) -> Result<(), tresult>;
+    fn set_state(&mut self, state: VstPtr<IBStream>) -> Result<(), tresult>;
+    fn get_state(&self, state: VstPtr<IBStream>) -> Result<(), tresult>;
+    fn get_parameter_count(&self) -> usize;
+    fn get_parameter_info(&self, idx: usize) -> Result<ParameterInfo, tresult>;
+    fn get_param_string_by_value(
+        &self,
+        id: ParamID,
+        value: f64,
+        string: &mut str,
+    ) -> Result<(), tresult>;
+    fn normalized_param_to_plain(&self, id: ParamID, value: f64) -> f64;
+    fn plain_param_to_normalized(&self, id: ParamID, value: f64) -> f64;
+    fn get_param_value_by_string(&self, id: ParamID, string: &str) -> Result<f64, tresult>;
+    fn get_param_normalized(&self, id: ParamID) -> f64;
+    fn set_param_normalized(&mut self, id: ParamID, value: f64) -> Result<(), tresult>;
+    fn set_component_handler(&mut self, handler: VstPtr<IComponentHandler>) -> Result<(), tresult>;
+    fn create_view(&mut self) -> Option<VstPtr<IPlugView>>;
+}
