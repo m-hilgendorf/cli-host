@@ -123,12 +123,23 @@ macro_rules! RIDL {
         impl $crate::Interface for $interface {
             #[inline]
             fn iid() -> $crate::TUID {
-                let bytes : [u32; 4] = [$w0, $w1, $w2, $w3];
-                let mut tuid  : [i8; 16] = [0;16];
-                for i in 0..4 {
-                    let big_e = bytes[i].to_be_bytes();
-                    for k in 0..4 {
-                        tuid[i*4 + k] = unsafe { std::mem::transmute(big_e[k]) };
+                let bytes: [u32; 4] = [$w0, $w1, $w2, $w3];
+                let mut tuid: [i8; 16] = [0;16];
+                if cfg!(target_os = "windows") {
+                    tuid[0] = (bytes[0] & 0x000000FF) as i8; tuid[1] = ((bytes[0] & 0x0000FF00) >> 8) as i8;
+                    tuid[2] = ((bytes[0] & 0x00FF0000) >> 16) as i8; tuid[3] = ((bytes[0] & 0xFF000000) >> 24) as i8;
+                    tuid[4] = ((bytes[1] & 0x00FF0000) >> 16) as i8; tuid[5] = ((bytes[1] & 0xFF000000) >> 24) as i8;
+                    tuid[6] = (bytes[1] & 0x000000FF) as i8; tuid[7] = ((bytes[1] & 0x0000FF00) >> 8) as i8;
+                    tuid[8] = ((bytes[2] & 0xFF000000) >> 24) as i8; tuid[9] = ((bytes[2] & 0x00FF0000) >> 16) as i8;
+                    tuid[10] = ((bytes[2] & 0x0000FF00) >> 8) as i8; tuid[11] = (bytes[2] & 0x000000FF) as i8;
+                    tuid[12] = ((bytes[3] & 0xFF000000) >> 24) as i8; tuid[13] = ((bytes[3] & 0x00FF0000) >> 16) as i8;
+                    tuid[14] = ((bytes[3] & 0x0000FF00) >> 8) as i8; tuid[15] = (bytes[3] & 0x000000FF) as i8;
+                } else {
+                    for i in 0..4 {
+                        let big_e = bytes[i].to_be_bytes();
+                        for k in 0..4 {
+                            tuid[i*4 + k] = unsafe { std::mem::transmute(big_e[k]) };
+                        }
                     }
                 }
                 tuid
