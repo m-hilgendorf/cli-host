@@ -3,6 +3,7 @@ use std::slice;
 use vst3_impl::*;
 use vst3_interfaces::vst::SymbolicSampleSizes::kSample32;
 use widestring::U16CString;
+
 #[doc(hidden)]
 #[repr(C)]
 #[derive(Vst3Impl)]
@@ -152,8 +153,8 @@ unsafe impl<T: PluginFactory + Interface> IPluginFactory for PluginFactoryImpl<T
 }
 #[vst3_impl]
 unsafe impl<T: PluginFactory + Interface> IPluginFactory2 for PluginFactoryImpl<T> {
-    fn getClassInfo2(&self, _idx: i32, pinfo: *mut PClassInfo2) -> tresult {
-        match self.pimpl.get_class_info2() {
+    fn getClassInfo2(&self, idx: i32, pinfo: *mut PClassInfo2) -> tresult {
+        match self.pimpl.get_class_info2(idx as usize) {
             Ok(info) => {
                 unsafe { *pinfo = info };
                 0
@@ -190,7 +191,9 @@ where
     T: PluginBase + Interface,
 {
     fn initialize(&mut self, host: *mut FUnknown) -> tresult {
-        let host = unsafe { VstPtr::from_raw(host) };
+        let host = if host.is_null() { None } else {
+            Some(unsafe { VstPtr::from_raw(host) })
+        };
         if let Err(e) = self.pimpl.initialize(host) {
             e
         } else {
@@ -223,7 +226,9 @@ where
     T: Component + Interface + PluginBase,
 {
     fn initialize(&mut self, host: *mut FUnknown) -> tresult {
-        let host = unsafe { VstPtr::from_raw(host) };
+        let host = if host.is_null() { None } else {
+            Some(unsafe { VstPtr::from_raw(host) })
+        };
         if let Err(e) = self.pimpl.initialize(host) {
             e
         } else {
@@ -255,7 +260,7 @@ where
 {
     fn getControllerClassID(&self, classId: *mut i8) -> tresult {
         unsafe {
-            std::slice::from_raw_parts_mut(classId, 16).copy_from_slice(&<T as Interface>::iid());
+            std::slice::from_raw_parts_mut(classId, 16).copy_from_slice(&self.pimpl.get_controller_class_id());
         }
         0
     }
@@ -450,8 +455,9 @@ where
     T: EditController + Interface + PluginBase,
 {
     fn initialize(&mut self, host: *mut FUnknown) -> tresult {
-        let host = unsafe { VstPtr::from_raw(host) };
-        if let Err(e) = self.pimpl.initialize(host) {
+        let host = if host.is_null() { None } else {
+            Some(unsafe { VstPtr::from_raw(host) })
+        };        if let Err(e) = self.pimpl.initialize(host) {
             e
         } else {
             0
@@ -476,14 +482,14 @@ unsafe impl<T: Interface + EditController + PluginBase> IEditController for Edit
         }
     }
     fn setState(&mut self, state: *mut IBStream) -> tresult {
-        if let Err(e) = unsafe { self.pimpl.set_state(VstPtr::from_raw(state)) } {
+        if let Err(e) = unsafe { self.pimpl.set_editor_state(VstPtr::from_raw(state)) } {
             e
         } else {
             0
         }
     }
     fn getState(&mut self, state: *mut IBStream) -> tresult {
-        if let Err(e) = unsafe { self.pimpl.get_state(VstPtr::from_raw(state)) } {
+        if let Err(e) = unsafe { self.pimpl.get_editor_state(VstPtr::from_raw(state)) } {
             e
         } else {
             0

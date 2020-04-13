@@ -16,6 +16,7 @@ macro_rules! RIDL {
         RIDL!{@vtbl $interface $vtbl () $(
             $(#[$($attrs)*])* fn $method($($p: $t,)*) -> $rtr,
         )+}
+        
         #[repr(C)]
         pub struct $interface {
             pub lpVtbl: *const $vtbl,
@@ -29,6 +30,7 @@ macro_rules! RIDL {
     (#[iid($($iid:expr),+)]
     interface $interface:ident ($vtbl:ident) : $pinterface:ident ($pvtbl:ident) {}) => (
         RIDL!{@vtbl $interface $vtbl (pub parent: $pvtbl,)}
+        
         #[repr(C)]
         pub struct $interface {
             pub lpVtbl: *const $vtbl,
@@ -44,6 +46,7 @@ macro_rules! RIDL {
         RIDL!{@vtbl $interface $vtbl (pub parent: $pvtbl,) $(
             $(#[$($attrs)*])* fn $method($($p: $t,)*) -> $rtr,
         )+}
+        
         #[repr(C)]
         pub struct $interface {
             pub lpVtbl: *const $vtbl,
@@ -82,7 +85,9 @@ macro_rules! RIDL {
     (@vtbl $interface:ident $vtbl:ident ($($fields:tt)*)
         $(fn $method:ident($($p:ident : $t:ty,)*) -> $rtr:ty,)*
     ) => (
-        RIDL!{@item #[repr(C)]
+        RIDL!{@item
+        
+        #[repr(C)]
         pub struct $vtbl {
             $($fields)*
             $(pub $method: unsafe extern "system" fn(

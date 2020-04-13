@@ -8,6 +8,7 @@ use vst3_interfaces::*;
 use widestring::{U16CStr, U16String};
 
 pub use vst3_interfaces::*;
+pub use vst3_derive::*;
 #[doc(hidden)]
 pub mod boilerplate;
 
@@ -16,7 +17,7 @@ pub trait PluginFactory {
     fn count_classes(&self) -> usize;
     fn get_class_info(&self, idx: usize) -> Result<PClassInfo, tresult>;
     fn create_instance(&mut self, cid: FIDString, iid: FIDString) -> Result<*mut c_void, tresult>;
-    fn get_class_info2(&self) -> Result<PClassInfo2, tresult>;
+    fn get_class_info2(&self, idx: usize) -> Result<PClassInfo2, tresult>;
 }
 pub trait ComponentHandler {
     fn begin_edit(&mut self, id: ParamID) -> Result<(), tresult>;
@@ -36,11 +37,12 @@ pub trait EventList {
 }
 
 pub trait PluginBase {
-    fn initialize(&mut self, host: VstPtr<FUnknown>) -> Result<(), tresult>;
+    fn initialize(&mut self, host: Option<VstPtr<FUnknown>>) -> Result<(), tresult>;
     fn terminate(&mut self) -> Result<(), tresult>;
 }
 
 pub trait Component {
+    fn get_controller_class_id(&self) -> TUID;
     fn set_io_mode(&mut self, id: i32) -> Result<(), tresult>;
     fn get_bus_count(&self, media: MediaType, dir: BusDirection) -> usize;
     fn get_bus_info(
@@ -92,8 +94,8 @@ pub trait AudioProcessor {
 
 pub trait EditController {
     fn set_component_state(&mut self, state: VstPtr<IBStream>) -> Result<(), tresult>;
-    fn set_state(&mut self, state: VstPtr<IBStream>) -> Result<(), tresult>;
-    fn get_state(&self, state: VstPtr<IBStream>) -> Result<(), tresult>;
+    fn set_editor_state(&mut self, state: VstPtr<IBStream>) -> Result<(), tresult>;
+    fn get_editor_state(&self, state: VstPtr<IBStream>) -> Result<(), tresult>;
     fn get_parameter_count(&self) -> usize;
     fn get_parameter_info(&self, idx: usize) -> Result<ParameterInfo, tresult>;
     fn get_param_string_by_value(

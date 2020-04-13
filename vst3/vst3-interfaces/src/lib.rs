@@ -32,16 +32,23 @@ pub trait Interface {
     fn iid() -> TUID;
 }
 // borrowed from the wio crate
-pub struct VstPtr<T: Interface>(NonNull<T>);
-unsafe impl<T:Interface> Send for VstPtr<T>{}
-unsafe impl<T:Interface> Sync for VstPtr<T>{}
+pub struct VstPtr<T: Interface>(pub NonNull<T>);
+unsafe impl<T: Interface> Send for VstPtr<T> {}
+unsafe impl<T: Interface> Sync for VstPtr<T> {}
 
 impl<T> VstPtr<T>
 where
     T: Interface,
 {
+    pub unsafe fn new(t: T) -> Self {
+        unsafe { Self::from_raw(Box::into_raw(Box::new(t))) }
+    }
     pub unsafe fn from_raw(ptr: *mut T) -> Self {
-        VstPtr(NonNull::new(ptr).expect("Pointer cannot be null"))
+        let ptr = VstPtr(NonNull::new(ptr).expect("Pointer cannot be null"));
+        ptr.as_unknown().addRef();
+        ptr.as_unknown().addRef(); // don't ask
+
+        ptr
     }
 
     pub unsafe fn up<U>(self) -> VstPtr<U>

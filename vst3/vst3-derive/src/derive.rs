@@ -77,7 +77,6 @@ impl<'a> Vst3Impl<'a> {
         let name = self.name;
         let refcount = self.refc_member;
         let (impgen, tygen, wherec) = self.generics.split_for_impl();
-
         let is_equal_iid = self.interfaces.iter().map(|path| {
             quote! { {
                 let mut iid_ = <#path as vst3_interfaces::Interface>::iid();

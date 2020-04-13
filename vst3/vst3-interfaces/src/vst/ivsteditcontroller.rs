@@ -22,6 +22,7 @@ pub mod KnobModes {
 
 #[repr(C)]
 #[repr(align(16))]
+#[derive(Copy, Clone, Debug)]
 pub struct ParameterInfo {
     pub id: ParamID,
     pub title: String128,
@@ -37,9 +38,9 @@ impl Default for ParameterInfo {
     fn default() -> Self {
         Self {
             id: kNoParamID,
-            title: [0; 128],
-            shortTitle: [0; 128],
-            units: [0; 128],
+            title: String128::from_str(""),
+            shortTitle: String128::from_str(""),
+            units: String128::from_str(""),
             stepCount: -1,
             defaultNormalizedValue: 0.0,
             unitId: kNoParentUnitId,
@@ -47,6 +48,7 @@ impl Default for ParameterInfo {
         }
     }
 }
+/*
 use std::fmt;
 use widestring::U16CStr;
 impl fmt::Debug for ParameterInfo {
@@ -68,7 +70,7 @@ impl fmt::Debug for ParameterInfo {
                 U16CStr::from_ptr_str(std::mem::transmute(self.title.as_ptr())).to_string_lossy(),
                 U16CStr::from_ptr_str(std::mem::transmute(self.shortTitle.as_ptr()))
                     .to_string_lossy(),
-                U16CStr::from_ptr_str(std::mem::transmute(self.units.as_ptr())).to_string_lossy(),
+                self.units,
                 self.stepCount,
                 self.defaultNormalizedValue,
                 self.unitId,
@@ -77,7 +79,7 @@ impl fmt::Debug for ParameterInfo {
         }
     }
 }
-
+*/
 // todo: Vst::ViewType::kEditor = "editor"
 pub mod RestartFlags {
     pub const kReloadComponent: i32 = 1 << 0;

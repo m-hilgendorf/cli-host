@@ -28,15 +28,19 @@ pub mod IoModes {
     pub const kOfflineProcessing: i32 = 2;
 }
 
+pub mod BusTypes {
+    pub const kMain: i32 = 0;
+    pub const kAux: i32 = 0;
+}
 #[repr(C)]
 #[repr(align(16))]
 pub struct BusInfo {
-    mediaType: MediaType,
-    direction: BusDirection,
-    channelLayout: i32,
-    name: String128,
-    busType: BusType,
-    flags: u32,
+    pub mediaType: MediaType,
+    pub direction: BusDirection,
+    pub channelCount: i32,
+    pub name: String128,
+    pub busType: BusType,
+    pub flags: u32,
 }
 
 #[repr(C)]
@@ -46,7 +50,7 @@ pub struct RoutingInfo {
     busIndex: i32,
     channel: i32,
 }
-RIDL! {#[iid(0xE831FF31, 0xE831FF31, 0x928EBBEE, 0x25697802)]
+RIDL! {#[iid(0xE831FF31, 0xF2D54301, 0x928EBBEE, 0x25697802)]
     interface IComponent(IComponentVtbl) : IPluginBase(IPluginBaseVtbl) {
         fn getControllerClassID(classId : *mut char8,) -> tresult,
         fn setIoMode (mode : IoMode,) -> tresult,

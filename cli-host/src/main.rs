@@ -88,6 +88,7 @@ fn main() {
     };
 
     let factory = unsafe { VstPtr::from_raw(GetPluginFactory()) };
+    unsafe { factory.addRef() };
     let num_classes = unsafe { (*factory).countClasses() };
 
     for i in 0..num_classes {
@@ -109,6 +110,9 @@ fn main() {
     for inst in instances.iter() {
         println!("------------");
         println!("{:?}", inst.1);
+        if let Ok(component) = inst.0.cast::<IComponent>() {
+            unsafe { component.initialize(null_mut()) };
+        }
         if let Ok(processor) = inst.0.cast::<IAudioProcessor>() {
             let proc = Processor::new(processor);
             println!("\taudio processor detected");

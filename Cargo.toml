@@ -6,5 +6,8 @@ authors = ["Mike Hilgendorf <mike@hilgendorf.audio>"]
 edition = "2018"
 license = "GPLv3"
 
+[lib]
+crate-type = ["cdylib"]
+
 [workspace]
-members = ["vst3", "cli-host"]
+members = ["vst3", "cli-host", "plugin"]

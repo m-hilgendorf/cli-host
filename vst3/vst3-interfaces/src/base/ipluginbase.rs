@@ -1,7 +1,9 @@
+#![allow(dead_code)]
 use super::ftypes::*;
 use super::funknown::*;
 use std::fmt;
 use std::os::raw::c_void;
+
 #[repr(C)]
 pub struct PFactoryInfo {
     pub vendor: [char8; 64],

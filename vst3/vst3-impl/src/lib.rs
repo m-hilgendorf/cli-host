@@ -38,7 +38,6 @@ impl Default for Refcount {
         }
     }
 }
-
 impl Refcount {
     #[inline]
     /// `fetch_add(1, Acquire) + 1`
