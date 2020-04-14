@@ -124,6 +124,8 @@ impl<'a> Vst3Impl<'a> {
                     }
                     if #( #is_equal_iid )||* {
                         *ppv = this as *mut std::os::raw::c_void;
+                        let this = &*(this as *const Self);
+                        this.#refcount.add_ref();
                         0
                     } else {
                         *ppv = std::ptr::null_mut();
