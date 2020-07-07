@@ -1,6 +1,8 @@
-# cli-host 
+# Follow [vst3-sys](https://github.com/RustAudio/vst3-sys) for updates to VST3 Bindings 
 
-Hosts a VST3 plugin by loading it from the command line. 
+This project spawned vst3-sys, a Rust crate with raw bindings to the VST3 API. The source here is incomplete and archived. 
+
+# cli-host 
 
 Developed as a debugging/experimenting platform for a port of the VST3 API to Rust. 
 
